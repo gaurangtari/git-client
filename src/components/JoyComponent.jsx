@@ -54,7 +54,7 @@ function JoyComponent() {
   //Sending Joystick Data
   const sendDataRedis = async (data) => {
     try {
-      await axios.post("https://nio-server.vercel.app/joystick-data", data);
+      await axios.post("https://nio-server.onrender.com/joystick-data", data);
       console.log("Data Sent");
     } catch (error) {
       console.log(error);
