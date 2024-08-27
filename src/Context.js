@@ -7,7 +7,7 @@ const SocketContext = createContext();
 const localhost = "http://localhost:9090";
 const hostedServer = "https://nio-server.onrender.com";
 
-const socket = io(localhost);
+const socket = io(hostedServer);
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
