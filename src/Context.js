@@ -1,12 +1,13 @@
 import React, { createContext, useState, useRef, useEffect } from "react";
 import { io } from "socket.io-client";
 import Peer from "simple-peer";
+import axios from "axios";
 
 const SocketContext = createContext();
+const localhost = "http://localhost:9090";
+const hostedServer = "https://nio-server.onrender.com";
 
-// const socket = io("http://172.26.27.246:9090");
-const socket = io('https://nio-server.onrender.com/');
-// const socket = io("http://localhost:9090");
+const socket = io(localhost);
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
@@ -15,20 +16,23 @@ const ContextProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [call, setCall] = useState({});
   const [me, setMe] = useState("");
+  const [adminId, setAdminId] = useState({});
 
   const myVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
 
+  const fetchRoomId = async () => {
+    console.log("function");
+    try {
+      const response = await axios.get(`${hostedServer}/get-admin-id`);
+      setAdminId(response.data[1].data.id);
+    } catch (error) {
+      console.error("error fetching stream data", error);
+    }
+  };
+
   useEffect(() => {
-    // navigator.mediaDevices
-    //   .getUserMedia({ video: true, audio: true })
-    //   .then((currentStream) => {
-    //     setStream(currentStream);
-
-    //     myVideo.current.srcObject = currentStream;
-    //   });
-
     const dummyStream = new MediaStream();
     const videoTrack = document
       .createElement("canvas")
@@ -37,11 +41,14 @@ const ContextProvider = ({ children }) => {
     dummyStream.addTrack(videoTrack);
 
     setStream(dummyStream);
-    socket.on("me", (id) => setMe(id));
+    socket.on("me", (id) => {
+      setMe(id);
+    });
 
     socket.on("callUser", ({ from, name: callerName, signal }) => {
       setCall({ isReceivingCall: true, from, name: callerName, signal });
     });
+    fetchRoomId();
   }, []);
 
   const answerCall = () => {
@@ -107,6 +114,7 @@ const ContextProvider = ({ children }) => {
         setName,
         callEnded,
         me,
+        adminId,
         callUser,
         leaveCall,
         answerCall,

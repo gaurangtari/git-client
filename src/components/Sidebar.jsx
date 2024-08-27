@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = ({ children }) => {
-  const { callAccepted, callEnded, leaveCall, callUser } =
+  const { callAccepted, callEnded, leaveCall, callUser, adminId } =
     useContext(SocketContext);
   const [idToCall, setIdToCall] = useState("");
   const classes = useStyles();
@@ -71,7 +71,7 @@ const Sidebar = ({ children }) => {
                   variant="contained"
                   color="primary"
                   fullWidth
-                  onClick={() => callUser(idToCall)}
+                  onClick={() => callUser(adminId)}
                   className={classes.margin}
                 >
                   Connect

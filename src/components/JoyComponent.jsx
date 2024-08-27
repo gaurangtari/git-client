@@ -20,6 +20,8 @@ const useStyles = makeStyles((theme) => ({
 
 function JoyComponent() {
   const classes = useStyles();
+  const hostedServer = "https://nio-server.onrender.com";
+  const localhost = "http://localhost:9090";
   const [joystickData, setJoystickData] = useState({
     surge: 0,
     sway: 0,
@@ -39,7 +41,6 @@ function JoyComponent() {
       sway: joyOneData.x,
     };
     setJoystickData(newData);
-    // sendDataRedis(joystickData);
   };
   //Joystick Two
   const handleMove2 = (joyTwoData) => {
@@ -49,12 +50,11 @@ function JoyComponent() {
       yaw: joyTwoData.x,
     };
     setJoystickData(newData);
-    // sendDataRedis(joystickData);
   };
   //Sending Joystick Data
   const sendDataRedis = async (data) => {
     try {
-      await axios.post("https://nio-server.onrender.com/joystick-data", data);
+      await axios.post(`${localhost}/joystick-data`, data);
       console.log("Data Sent");
     } catch (error) {
       console.log(error);
