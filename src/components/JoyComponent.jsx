@@ -7,10 +7,9 @@ import axios from "axios";
 const useStyles = makeStyles((theme) => ({
   container: {
     width: "600px",
-    margin: "35px 0",
     padding: 0,
     [theme.breakpoints.down("xs")]: {
-      width: "80%",
+      width: "100%",
     },
     display: "flex",
     flexDirection: "row",
@@ -53,9 +52,11 @@ function JoyComponent() {
   };
   //Sending Joystick Data
   const sendDataRedis = async (data) => {
+    
     try {
-      await axios.post(`${localhost}/joystick-data`, data);
+      await axios.post(`${hostedServer}/joystick-data`, data);
       console.log("Data Sent");
+      console.log(data);
     } catch (error) {
       console.log(error);
       console.error("Error sending data to Redis:", error);
@@ -68,8 +69,8 @@ function JoyComponent() {
       <Container className={classes.container}>
         <div>
           <Joystick
-            baseColor="#355764"
-            stickColor="#FFEA11"
+            baseColor="#535454"
+            stickColor="#5faaed"
             size={100}
             move={(e) => {
               handleMove({ x: e.x, y: e.y });
@@ -81,8 +82,8 @@ function JoyComponent() {
         </div>
         <div>
           <Joystick
-            baseColor="#355764"
-            stickColor="#FFEA11"
+            baseColor="#535454"
+            stickColor="#5faaed"
             size={100}
             move={(e) => {
               handleMove2({ x: e.x, y: e.y });

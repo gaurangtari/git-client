@@ -29,7 +29,7 @@ function ResponsiveAppBar() {
             component="img"
             sx={{ height: 54 }}
             alt="Logo"
-            src={require("../constant/nio_logo.jpeg")}
+            src={require("../constant/nio logo.jpeg")}
           />
           <Typography
             variant="h6"
@@ -46,7 +46,7 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            Admin
+            Blue Rover
           </Typography>
         </Toolbar>
       </Container>

@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
   },
   margin: {
     marginTop: 20,
+    backgroundColor: "#5faaed",
+    color: "#FFFFFF",
+    fontWeight: "bold"
   },
   padding: {
     padding: 20,
@@ -49,12 +52,12 @@ const Sidebar = ({ children }) => {
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container className={classes.gridContainer}>
             <Grid item xs={12} md={6} className={classes.padding}>
-              <TextField
+              {/* <TextField
                 label="Enter ID"
                 value={idToCall}
                 onChange={(e) => setIdToCall(e.target.value)}
                 fullWidth
-              />
+              /> */}
               {callAccepted && !callEnded ? (
                 <Button
                   variant="contained"
@@ -69,7 +72,6 @@ const Sidebar = ({ children }) => {
               ) : (
                 <Button
                   variant="contained"
-                  color="primary"
                   fullWidth
                   onClick={() => callUser(adminId)}
                   className={classes.margin}
