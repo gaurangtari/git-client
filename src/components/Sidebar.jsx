@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
     backgroundColor: "#5faaed",
     color: "#FFFFFF",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   padding: {
     padding: 20,
@@ -41,8 +41,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = ({ children }) => {
-  const { callAccepted, callEnded, leaveCall, callUser, adminId } =
-    useContext(SocketContext);
+  const {
+    callAccepted,
+    callEnded,
+    leaveCall,
+    callUser,
+    adminId,
+    name,
+    setName,
+  } = useContext(SocketContext);
   const [idToCall, setIdToCall] = useState("");
   const classes = useStyles();
 
@@ -52,12 +59,12 @@ const Sidebar = ({ children }) => {
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container className={classes.gridContainer}>
             <Grid item xs={12} md={6} className={classes.padding}>
-              {/* <TextField
-                label="Enter ID"
-                value={idToCall}
-                onChange={(e) => setIdToCall(e.target.value)}
+              <TextField
+                label="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 fullWidth
-              /> */}
+              />
               {callAccepted && !callEnded ? (
                 <Button
                   variant="contained"
@@ -65,7 +72,6 @@ const Sidebar = ({ children }) => {
                   startIcon={<PhoneDisabled fontSize="large" />}
                   fullWidth
                   onClick={leaveCall}
-                  className={classes.margin}
                 >
                   Hang Up
                 </Button>

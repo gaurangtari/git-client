@@ -2,12 +2,16 @@ import React, { createContext, useState, useRef, useEffect } from "react";
 import { io } from "socket.io-client";
 import Peer from "simple-peer";
 import axios from "axios";
+import * as process from "process";
+window.global = window;
+window.process = process;
+window.Buffer = [];
 
 const SocketContext = createContext();
-const localhost = "http://localhost:9090";
-const hostedServer = "https://nio-server.onrender.com";
 
-const socket = io(hostedServer);
+const SERVER = "http://172.27.29.108:9090";
+
+const socket = io(SERVER);
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
@@ -23,9 +27,8 @@ const ContextProvider = ({ children }) => {
   const connectionRef = useRef();
 
   const fetchRoomId = async () => {
-    console.log("function");
     try {
-      const response = await axios.get(`${hostedServer}/get-admin-id`);
+      const response = await axios.get(`${SERVER}/get-admin-id`);
       setAdminId(response.data[1].data.id);
     } catch (error) {
       console.error("error fetching stream data", error);
@@ -41,15 +44,22 @@ const ContextProvider = ({ children }) => {
     dummyStream.addTrack(videoTrack);
 
     setStream(dummyStream);
+
     socket.on("me", (id) => {
       setMe(id);
+    });
+
+    socket.on("joystick-data", (data) => {
+      console.log(data);
     });
 
     socket.on("callUser", ({ from, name: callerName, signal }) => {
       setCall({ isReceivingCall: true, from, name: callerName, signal });
     });
     fetchRoomId();
-  }, []);
+    console.log("admin id:", adminId, " me:", me);
+    socket.emit("join-room", adminId, me);
+  }, [adminId, me]);
 
   const answerCall = () => {
     setCallAccepted(true);
@@ -61,6 +71,7 @@ const ContextProvider = ({ children }) => {
     });
 
     peer.on("stream", (currentStream) => {
+      console.log("stream from answercall", currentStream);
       userVideo.current.srcObject = currentStream;
     });
 
@@ -71,6 +82,7 @@ const ContextProvider = ({ children }) => {
 
   const callUser = (id) => {
     const peer = new Peer({ initiator: true, trickle: false, stream });
+    setCallAccepted(false);
 
     peer.on("signal", (data) => {
       socket.emit("callUser", {
@@ -83,6 +95,7 @@ const ContextProvider = ({ children }) => {
 
     peer.on("stream", (currentStream) => {
       userVideo.current.srcObject = currentStream;
+      console.log("stream from call user", currentStream);
     });
 
     socket.on("callAccepted", (signal) => {
@@ -118,6 +131,8 @@ const ContextProvider = ({ children }) => {
         callUser,
         leaveCall,
         answerCall,
+        SERVER,
+        socket,
       }}
     >
       {children}

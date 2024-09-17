@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Joystick } from "react-joystick-component";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container } from "@material-ui/core";
-import axios from "axios";
+import { SocketContext } from "../Context";
+import { io } from "socket.io-client";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -18,9 +19,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JoyComponent() {
+  const { SERVER } = useContext(SocketContext);
+  const socket = io(SERVER);
+
   const classes = useStyles();
-  const hostedServer = "https://nio-server.onrender.com";
-  const localhost = "http://localhost:9090";
   const [joystickData, setJoystickData] = useState({
     surge: 0,
     sway: 0,
@@ -34,6 +36,7 @@ function JoyComponent() {
 
   //Joystick One
   const handleMove = (joyOneData) => {
+    console.log(joyOneData);
     const newData = {
       ...joystickData,
       surge: joyOneData.y,
@@ -52,15 +55,7 @@ function JoyComponent() {
   };
   //Sending Joystick Data
   const sendDataRedis = async (data) => {
-    
-    try {
-      await axios.post(`${hostedServer}/joystick-data`, data);
-      console.log("Data Sent");
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-      console.error("Error sending data to Redis:", error);
-    }
+    socket.emit("joystick-data", data);
   };
   // const handleStop = () => {};
   return (
@@ -86,6 +81,7 @@ function JoyComponent() {
             stickColor="#5faaed"
             size={100}
             move={(e) => {
+              console.log(e);
               handleMove2({ x: e.x, y: e.y });
             }}
             stop={() => {

@@ -42,7 +42,6 @@ const App = () => {
       <ResponsiveAppBar/>
       <VideoPlayer />
       <Sidebar>
-        <Notifications />
       </Sidebar>
     </div>
   );
