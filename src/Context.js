@@ -9,7 +9,7 @@ window.Buffer = [];
 
 const SocketContext = createContext();
 
-const SERVER = "http://172.27.29.108:9090";
+const SERVER = "http://localhost:9090";
 
 const socket = io(SERVER);
 
